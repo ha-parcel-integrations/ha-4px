@@ -43,7 +43,7 @@ Part of the [ha-parcel-integrations](https://github.com/ha-parcel-integrations) 
 
 ## Requirements
 
-- Home Assistant 2024.7 or newer
+- Home Assistant 2024.12 or newer
 - A 4PX parcel and its tracking code (from the shipping
   confirmation email or the missed-delivery card) — no account needed
 
@@ -95,6 +95,12 @@ Standard HA removal applies: **Settings → Devices & Services → 4PX → ⋮ �
 | `sensor.fourpx_last_successful_update` | Diagnostic: when 4PX was last polled successfully |
 
 A delivered parcel moves from its per-parcel sensor to the delivered sensor automatically.
+
+A **`calendar.fourpx_deliveries`** entity shows expected delivery dates for
+active parcels — read-only, no extra API calls.
+
+A **`button.fourpx_refresh`** entity forces an immediate poll, without waiting
+for the next scheduled interval.
 
 ## Parcel status reference
 
