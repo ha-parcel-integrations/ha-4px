@@ -21,11 +21,25 @@ _LOGGER = logging.getLogger(__name__)
 NEW_ISSUE_URL = "https://github.com/ha-parcel-integrations/ha-4px/issues/new?template=unrecognised_status.yml"
 _STATUS_MAP: dict[str, ParcelStatus] = {
     "FPX_L_RPIF": ParcelStatus.REGISTERED,
+    "FPX_O_IR": ParcelStatus.REGISTERED,
+    "FPX_O_IRI": ParcelStatus.REGISTERED,
     "FPX_C_SPLS": ParcelStatus.IN_TRANSIT,
     "FPX_C_AAF": ParcelStatus.IN_TRANSIT,
     "FPX_C_ADFF": ParcelStatus.IN_TRANSIT,
     "FPX_O_RR": ParcelStatus.IN_TRANSIT,
+    "FPX_M_HA": ParcelStatus.IN_TRANSIT,
+    "FPX_M_DFOA": ParcelStatus.IN_TRANSIT,
+    "FPX_M_ATA": ParcelStatus.IN_TRANSIT,
+    "FPX_M_CRSD": ParcelStatus.IN_TRANSIT,
+    "FPX_M_IT": ParcelStatus.IN_TRANSIT,
+    "FPX_I_RCUK": ParcelStatus.IN_TRANSIT,
+    "FPX_D_AOPC": ParcelStatus.IN_TRANSIT,
+    "FPX_D_APC": ParcelStatus.IN_TRANSIT,
+    "FPX_D_AAD": ParcelStatus.IN_TRANSIT,
+    "FPX_D_STPP": ParcelStatus.IN_TRANSIT,
+    "FPX_D_HQ": ParcelStatus.IN_TRANSIT,
     "FPX_D_SD": ParcelStatus.OUT_FOR_DELIVERY,
+    "FPX_D_FD": ParcelStatus.PROBLEM,
     "FPX_S_OK": ParcelStatus.DELIVERED,
 }
 _warned: set[str] = set()

@@ -24,13 +24,31 @@ def setup_function() -> None:
 def test_all_observed_codes_are_conservatively_mapped():
     assert _STATUS_MAP == {
         "FPX_L_RPIF": ParcelStatus.REGISTERED,
+        "FPX_O_IR": ParcelStatus.REGISTERED,
+        "FPX_O_IRI": ParcelStatus.REGISTERED,
         "FPX_C_SPLS": ParcelStatus.IN_TRANSIT,
         "FPX_C_AAF": ParcelStatus.IN_TRANSIT,
         "FPX_C_ADFF": ParcelStatus.IN_TRANSIT,
         "FPX_O_RR": ParcelStatus.IN_TRANSIT,
+        "FPX_M_HA": ParcelStatus.IN_TRANSIT,
+        "FPX_M_DFOA": ParcelStatus.IN_TRANSIT,
+        "FPX_M_ATA": ParcelStatus.IN_TRANSIT,
+        "FPX_M_CRSD": ParcelStatus.IN_TRANSIT,
+        "FPX_M_IT": ParcelStatus.IN_TRANSIT,
+        "FPX_I_RCUK": ParcelStatus.IN_TRANSIT,
+        "FPX_D_AOPC": ParcelStatus.IN_TRANSIT,
+        "FPX_D_APC": ParcelStatus.IN_TRANSIT,
+        "FPX_D_AAD": ParcelStatus.IN_TRANSIT,
+        "FPX_D_STPP": ParcelStatus.IN_TRANSIT,
+        "FPX_D_HQ": ParcelStatus.IN_TRANSIT,
         "FPX_D_SD": ParcelStatus.OUT_FOR_DELIVERY,
+        "FPX_D_FD": ParcelStatus.PROBLEM,
         "FPX_S_OK": ParcelStatus.DELIVERED,
     }
+
+
+def test_delivery_failed_maps_to_problem():
+    assert map_parcel_status("FPX_D_FD") is ParcelStatus.PROBLEM
 
 
 def test_unknown_or_missing_code_warns_once(caplog):
