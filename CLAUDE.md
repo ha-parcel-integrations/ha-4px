@@ -35,6 +35,13 @@ you act in one of these areas:
 
 ## Carrier-specific notes
 
+**No `awaiting_pickup` sensor yet — unconfirmed, not structural.** No
+pickup-point status/code has been observed for 4PX; `status_vocab` is only
+`partial` in carrier-research's `4px.md`, and `pickup`/`pickup_point` stay
+`False`/`None` in `parcels.py`. That is "unseen so far," not "cannot
+happen" — revisit once a real parcel or a fuller code capture settles it.
+See `.github/CONVENTIONS.md`'s pickup-point convention.
+
 4PX is an anonymous, code-only integration. Poll each configured code separately
 and retain a cached parcel after a transient failure or a pending/not-recognised
 response. `tracks: null` with `serverCode: null` is pending, not an `unknown`
