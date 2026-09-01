@@ -97,6 +97,22 @@ def test_history_caps_and_skips_offsetless_events():
     assert len(build_history(events)) == 20
 
 
+def test_normalize_pending_placeholder_does_not_warn(caplog):
+    parcel = normalize_parcel({"serverCode": "SYNTHETICPENDING", "tracks": []})
+    assert parcel["status"] is ParcelStatus.UNKNOWN
+    assert parcel["raw_status"] is None
+    assert "Unrecognised 4PX status shape" not in caplog.text
+
+
+def test_normalize_resolved_parcel_missing_tkcode_still_warns(caplog):
+    raw = active_sample()
+    del raw["tracks"][0]["tkCode"]
+    parcel = normalize_parcel(raw)
+    assert parcel["status"] is ParcelStatus.UNKNOWN
+    assert "Unrecognised 4PX status shape" in caplog.text
+    assert "tkCode=<missing>" in caplog.text
+
+
 def test_normalize_delivered_and_active_contract():
     delivered = normalize_parcel(delivered_sample(), include_history=True)
     active = normalize_parcel(active_sample())

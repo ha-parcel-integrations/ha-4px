@@ -134,8 +134,16 @@ def normalize_parcel(raw: dict[str, Any], *, include_history: bool = False) -> d
     """Normalise a resolved 4PX payload; skeletons are handled by coordinator."""
     events = raw.get("tracks") if isinstance(raw.get("tracks"), list) else []
     newest = events[0] if events and isinstance(events[0], dict) else {}
-    code = newest.get("tkCode")
-    status = map_parcel_status(code)
+    if events:
+        code = newest.get("tkCode")
+        status = map_parcel_status(code)
+    else:
+        # No track events at all is the confirmed pending/not-yet-scanned
+        # shape — api.py's null/null envelope, or the coordinator's synthetic
+        # not-found placeholder — not a novel status shape, so it must not
+        # trip the unrecognised-shape warning below.
+        code = None
+        status = ParcelStatus.UNKNOWN
     delivered_at = _timestamp(newest) if status is ParcelStatus.DELIVERED else None
     return {
         "carrier": "4PX",
