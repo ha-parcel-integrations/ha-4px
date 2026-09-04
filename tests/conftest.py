@@ -23,6 +23,7 @@ def reset_one_shot_warnings():
     from custom_components.fourpx import parcels
 
     parcels._warned.clear()
+    parcels._timestamp_shapes.clear()
     yield
 
 

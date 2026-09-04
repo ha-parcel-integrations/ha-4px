@@ -111,6 +111,7 @@ The `status` field is the carrier-agnostic enum shared by the whole integration 
 | `in_transit` | In the sorting network |
 | `out_for_delivery` | With the courier today |
 | `delivered` | Delivered |
+| `problem` | A delivery attempt failed |
 | `unknown` | Not yet scanned, or a status whose meaning has not been confirmed yet |
 
 `raw_status` contains only 4PX's machine event code. Event prose and locations are deliberately not exposed because they can contain downstream tracking details.
