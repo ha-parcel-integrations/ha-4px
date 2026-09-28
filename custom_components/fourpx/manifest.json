@@ -2,7 +2,7 @@
   "domain": "fourpx",
   "name": "4PX",
   "codeowners": [
-    "@peternijssen"
+    "@peter-mdf"
   ],
   "config_flow": true,
   "documentation": "https://github.com/ha-parcel-integrations/ha-4px",
