@@ -35,6 +35,7 @@ def test_all_observed_codes_are_conservatively_mapped():
         "FPX_M_ATA": ParcelStatus.IN_TRANSIT,
         "FPX_M_CRSD": ParcelStatus.IN_TRANSIT,
         "FPX_M_IT": ParcelStatus.IN_TRANSIT,
+        "FPX_F_ST": ParcelStatus.IN_TRANSIT,
         "FPX_I_RCUK": ParcelStatus.IN_TRANSIT,
         "FPX_D_AOPC": ParcelStatus.IN_TRANSIT,
         "FPX_D_APC": ParcelStatus.IN_TRANSIT,

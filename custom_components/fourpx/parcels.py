@@ -32,6 +32,8 @@ _STATUS_MAP: dict[str, ParcelStatus] = {
     "FPX_M_ATA": ParcelStatus.IN_TRANSIT,
     "FPX_M_CRSD": ParcelStatus.IN_TRANSIT,
     "FPX_M_IT": ParcelStatus.IN_TRANSIT,
+    # "Shipment in transit", category "Transit in the country of origin"
+    "FPX_F_ST": ParcelStatus.IN_TRANSIT,
     "FPX_I_RCUK": ParcelStatus.IN_TRANSIT,
     "FPX_D_AOPC": ParcelStatus.IN_TRANSIT,
     "FPX_D_APC": ParcelStatus.IN_TRANSIT,
