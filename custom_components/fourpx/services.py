@@ -18,6 +18,8 @@ from .const import CONF_PARCELS, CONF_TRACKING_CODE, DOMAIN
 SERVICE_TRACK_PARCEL = "track_parcel"
 SERVICE_UNTRACK_PARCEL = "untrack_parcel"
 
+# HA core's stubs now expect probatio schemas while integrations still build
+# voluptuous ones, which core accepts at runtime.
 _TRACK_SCHEMA = vol.Schema({vol.Required(CONF_TRACKING_CODE): cv.string})
 _UNTRACK_SCHEMA = vol.Schema({vol.Required(CONF_TRACKING_CODE): cv.string})
 
@@ -62,10 +64,16 @@ def async_setup_services(hass: HomeAssistant) -> None:
             )
 
     hass.services.async_register(
-        DOMAIN, SERVICE_TRACK_PARCEL, _track, schema=_TRACK_SCHEMA
+        DOMAIN,
+        SERVICE_TRACK_PARCEL,
+        _track,
+        schema=_TRACK_SCHEMA,  # type: ignore[arg-type]
     )
     hass.services.async_register(
-        DOMAIN, SERVICE_UNTRACK_PARCEL, _untrack, schema=_UNTRACK_SCHEMA
+        DOMAIN,
+        SERVICE_UNTRACK_PARCEL,
+        _untrack,
+        schema=_UNTRACK_SCHEMA,  # type: ignore[arg-type]
     )
 
 

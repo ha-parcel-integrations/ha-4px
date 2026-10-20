@@ -144,7 +144,8 @@ class FPXOptionsFlowHandler(OptionsFlow):
         return self.async_show_form(
             step_id="parcels",
             data_schema=self.add_suggested_values_to_schema(
-                schema, {"tracking_codes": current_codes}
+                schema,  # type: ignore[arg-type]
+                {"tracking_codes": current_codes},
             ),
             errors=errors,
         )
@@ -194,4 +195,4 @@ class FPXOptionsFlowHandler(OptionsFlow):
                 default=current.get(CONF_INCLUDE_HISTORY, DEFAULT_INCLUDE_HISTORY),
             ): selector.BooleanSelector(),
         }
-        return self.async_show_form(step_id="settings", data_schema=vol.Schema(schema))
+        return self.async_show_form(step_id="settings", data_schema=vol.Schema(schema))  # type: ignore[arg-type]
