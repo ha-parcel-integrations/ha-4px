@@ -1,4 +1,5 @@
 """Tests for 4PX setup and unload."""
+
 from unittest.mock import AsyncMock, patch
 
 from homeassistant.config_entries import ConfigEntryState

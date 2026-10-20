@@ -1,4 +1,5 @@
 """4PX parcel tracker custom component for Home Assistant."""
+
 from __future__ import annotations
 
 import logging
@@ -57,9 +58,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: FPXConfigEntry) -> bool:
     return True
 
 
-async def _async_options_updated(
-    hass: HomeAssistant, entry: FPXConfigEntry
-) -> None:
+async def _async_options_updated(hass: HomeAssistant, entry: FPXConfigEntry) -> None:
     """Apply changed options by refreshing the coordinator."""
     await entry.runtime_data.coordinator.async_request_refresh()
 

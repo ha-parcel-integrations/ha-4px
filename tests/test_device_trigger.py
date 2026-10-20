@@ -1,4 +1,5 @@
 """Tests for 4PX device triggers."""
+
 from custom_components.fourpx.const import DOMAIN
 from custom_components.fourpx.device_trigger import (
     TRIGGER_EVENTS,

@@ -29,6 +29,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
+
 def normalize_tracking_code(value: str) -> str:
     """Strip surrounding whitespace and uppercase a 4PX tracking code."""
     return (value or "").strip().upper()

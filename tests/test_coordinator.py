@@ -2,6 +2,7 @@
 
 The parcel mapping itself is covered by ``test_parcels.py``.
 """
+
 from unittest.mock import AsyncMock
 
 import pytest
@@ -208,10 +209,12 @@ async def test_cache_only_poll_does_not_stamp_last_success(hass):
 
 async def test_delivered_code_skipped_from_fetch(hass):
     """A delivered code stops being fetched from the next cycle on."""
-    entry = _entry_with([
-        {CONF_TRACKING_CODE: ACTIVE_CODE},
-        {CONF_TRACKING_CODE: DELIVERED_CODE},
-    ])
+    entry = _entry_with(
+        [
+            {CONF_TRACKING_CODE: ACTIVE_CODE},
+            {CONF_TRACKING_CODE: DELIVERED_CODE},
+        ]
+    )
     entry.add_to_hass(hass)
     client = AsyncMock()
     client.async_get_parcel.side_effect = lambda code: (
@@ -289,9 +292,7 @@ async def test_event_carries_device_id(hass):
     coordinator = FPXCoordinator(hass, client, entry)
 
     events = []
-    hass.bus.async_listen(
-        f"{DOMAIN}_parcel_status_changed", lambda e: events.append(e)
-    )
+    hass.bus.async_listen(f"{DOMAIN}_parcel_status_changed", lambda e: events.append(e))
 
     client.async_get_parcel.return_value = _in_transit()
     await coordinator._async_update_data()
@@ -309,9 +310,7 @@ async def test_fires_status_changed_event(hass):
     coordinator = FPXCoordinator(hass, client, entry)
 
     events = []
-    hass.bus.async_listen(
-        f"{DOMAIN}_parcel_status_changed", lambda e: events.append(e)
-    )
+    hass.bus.async_listen(f"{DOMAIN}_parcel_status_changed", lambda e: events.append(e))
 
     client.async_get_parcel.return_value = _in_transit()
     await coordinator._async_update_data()  # first refresh: suppressed
@@ -428,7 +427,7 @@ async def test_fires_delivery_time_changed_event(hass):
     await coordinator._async_update_data()  # first refresh: suppressed
 
     moved = active_sample()
-        # 4PX has no confirmed ETA field; therefore it never emits this event.
+    # 4PX has no confirmed ETA field; therefore it never emits this event.
     client.async_get_parcel.return_value = moved
     await coordinator._async_update_data()
     await hass.async_block_till_done()

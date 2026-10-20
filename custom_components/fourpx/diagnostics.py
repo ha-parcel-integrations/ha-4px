@@ -1,4 +1,5 @@
 """Diagnostics support for the 4PX parcel tracker integration."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -20,10 +21,24 @@ TO_REDACT = {
     "receiver",
     "url",
     # carrier payload fields
-    "queryCode", "serverCode", "shipperCode", "hawbCodeSet", "masterOrderNo",
-    "ctStartCode", "ctEndCode", "consigneePostcode", "spTkZipCode",
-    "channelContact", "sigPicUrl", "isSigPic", "tkLocation", "tkDesc",
-    "tkTranslatedDesc", "spTkSummary", "tkTranslatedSummary", "tag",
+    "queryCode",
+    "serverCode",
+    "shipperCode",
+    "hawbCodeSet",
+    "masterOrderNo",
+    "ctStartCode",
+    "ctEndCode",
+    "consigneePostcode",
+    "spTkZipCode",
+    "channelContact",
+    "sigPicUrl",
+    "isSigPic",
+    "tkLocation",
+    "tkDesc",
+    "tkTranslatedDesc",
+    "spTkSummary",
+    "tkTranslatedSummary",
+    "tag",
 }
 
 

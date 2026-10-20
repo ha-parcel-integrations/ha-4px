@@ -1,4 +1,5 @@
 """Pure 4PX parcel mapping helpers."""
+
 from __future__ import annotations
 
 import logging
@@ -93,7 +94,7 @@ def parse_iso(value: str | None) -> datetime | None:
     if not value:
         return None
     try:
-        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(str(value))
     except ValueError:
         return None
     return parsed if parsed.tzinfo else None
@@ -102,17 +103,31 @@ def parse_iso(value: str | None) -> datetime | None:
 def _timestamp(event: dict[str, Any]) -> str | None:
     value = event.get("tkDate")
     parsed = parse_iso(value)
-    shape = (type(value).__name__, type(event.get("tkDateStr")).__name__, type(event.get("tkTimezone")).__name__)
+    shape = (
+        type(value).__name__,
+        type(event.get("tkDateStr")).__name__,
+        type(event.get("tkTimezone")).__name__,
+    )
     if shape not in _KNOWN_TIMESTAMP_SHAPES and shape not in _timestamp_shapes:
         _timestamp_shapes.add(shape)
-        _LOGGER.warning("4PX timestamp field shape needs confirmation; tkDate=%s tkDateStr=%s tkTimezone=%s; %s", *shape, NEW_ISSUE_URL)
+        _LOGGER.warning(
+            "4PX timestamp field shape needs confirmation; tkDate=%s tkDateStr=%s tkTimezone=%s; %s",
+            *shape,
+            NEW_ISSUE_URL,
+        )
     if parsed is None:
-        _warn_once("timestamp:invalid", "4PX timestamp is not offset-aware; open an issue: %s", NEW_ISSUE_URL)
+        _warn_once(
+            "timestamp:invalid",
+            "4PX timestamp is not offset-aware; open an issue: %s",
+            NEW_ISSUE_URL,
+        )
         return None
     return str(value)
 
 
-def build_history(events: list[Any] | None, *, max_events: int = HISTORY_MAX_EVENTS) -> list[dict[str, Any]]:
+def build_history(
+    events: list[Any] | None, *, max_events: int = HISTORY_MAX_EVENTS
+) -> list[dict[str, Any]]:
     """Make canonical oldest-to-newest history from 4PX's newest-first list."""
     history: list[tuple[datetime, dict[str, Any]]] = []
     for event in events or []:
@@ -122,7 +137,16 @@ def build_history(events: list[Any] | None, *, max_events: int = HISTORY_MAX_EVE
         if (parsed := parse_iso(timestamp)) is None:
             continue
         code = event.get("tkCode")
-        history.append((parsed, {"timestamp": timestamp, "status": map_event_status(code), "raw_status": code}))
+        history.append(
+            (
+                parsed,
+                {
+                    "timestamp": timestamp,
+                    "status": map_event_status(code),
+                    "raw_status": code,
+                },
+            )
+        )
     history.sort(key=lambda item: item[0])
     return [entry for _, entry in history][-max_events:]
 
@@ -132,7 +156,9 @@ def tracking_url(code: str | None) -> str | None:
     return TRACKING_URL.format(tracking_code=code) if code else None
 
 
-def normalize_parcel(raw: dict[str, Any], *, include_history: bool = False) -> dict[str, Any]:
+def normalize_parcel(
+    raw: dict[str, Any], *, include_history: bool = False
+) -> dict[str, Any]:
     """Normalise a resolved 4PX payload; skeletons are handled by coordinator."""
     events = raw.get("tracks") if isinstance(raw.get("tracks"), list) else []
     newest = events[0] if events and isinstance(events[0], dict) else {}
@@ -168,7 +194,9 @@ def normalize_parcel(raw: dict[str, Any], *, include_history: bool = False) -> d
     }
 
 
-def sort_parcels_by_ts(parcels: list[dict], key_field: str, *, descending: bool = False) -> list[dict]:
+def sort_parcels_by_ts(
+    parcels: list[dict], key_field: str, *, descending: bool = False
+) -> list[dict]:
     """Sort parseable timestamp values first, keeping missing values last."""
     with_ts: list[tuple[datetime, dict]] = []
     without_ts: list[dict] = []
@@ -183,8 +211,17 @@ def sort_parcels_by_ts(parcels: list[dict], key_field: str, *, descending: bool 
 
 def apply_delivered_filter(parcels: list[dict], entry: ConfigEntry) -> list[dict]:
     """Apply configured delivered-package retention to a sorted parcel list."""
-    amount = int(entry.options.get(CONF_DELIVERED_FILTER_AMOUNT, DEFAULT_DELIVERED_FILTER_AMOUNT))
-    if entry.options.get(CONF_DELIVERED_FILTER_TYPE, DEFAULT_DELIVERED_FILTER_TYPE) == "days":
+    amount = int(
+        entry.options.get(CONF_DELIVERED_FILTER_AMOUNT, DEFAULT_DELIVERED_FILTER_AMOUNT)
+    )
+    if (
+        entry.options.get(CONF_DELIVERED_FILTER_TYPE, DEFAULT_DELIVERED_FILTER_TYPE)
+        == "days"
+    ):
         cutoff = datetime.now(timezone.utc) - timedelta(days=amount)
-        return [p for p in parcels if (parsed := parse_iso(p.get("delivered_at"))) is None or parsed >= cutoff]
+        return [
+            p
+            for p in parcels
+            if (parsed := parse_iso(p.get("delivered_at"))) is None or parsed >= cutoff
+        ]
     return parcels[:amount]

@@ -1,4 +1,5 @@
 """Tests for 4PX's conservative payload mapping."""
+
 from custom_components.fourpx.const import (
     CAPABILITIES,
     KNOWN_CAPABILITIES,
@@ -87,13 +88,20 @@ def test_numeric_parcel_status_does_not_warn_without_a_confirmed_mapping(caplog)
 
 def test_history_reverses_events_and_uses_offset_bearing_tkdate():
     history = build_history(delivered_sample()["tracks"])
-    assert [item["raw_status"] for item in history] == ["FPX_L_RPIF", "FPX_O_RR", "FPX_D_SD", "FPX_S_OK"]
+    assert [item["raw_status"] for item in history] == [
+        "FPX_L_RPIF",
+        "FPX_O_RR",
+        "FPX_D_SD",
+        "FPX_S_OK",
+    ]
     assert history[-1]["timestamp"] == "2026-04-29T13:12:42+00:00"
     assert history[-1]["status"] is ParcelStatus.DELIVERED
 
 
 def test_history_caps_and_skips_offsetless_events():
-    events = [event("FPX_C_AAF", f"2026-04-{day:02d}T01:00:00+00:00") for day in range(1, 25)]
+    events = [
+        event("FPX_C_AAF", f"2026-04-{day:02d}T01:00:00+00:00") for day in range(1, 25)
+    ]
     events.append(event("FPX_C_AAF", "2026-04-30T01:00:00"))
     assert len(build_history(events)) == 20
 
@@ -117,7 +125,25 @@ def test_normalize_resolved_parcel_missing_tkcode_still_warns(caplog):
 def test_normalize_delivered_and_active_contract():
     delivered = normalize_parcel(delivered_sample(), include_history=True)
     active = normalize_parcel(active_sample())
-    assert list(delivered) == ["carrier", "barcode", "sender", "receiver", "status", "raw_status", "delivered", "delivered_at", "planned_from", "planned_to", "pickup", "pickup_point", "url", "weight", "dimensions", "history", "raw"]
+    assert list(delivered) == [
+        "carrier",
+        "barcode",
+        "sender",
+        "receiver",
+        "status",
+        "raw_status",
+        "delivered",
+        "delivered_at",
+        "planned_from",
+        "planned_to",
+        "pickup",
+        "pickup_point",
+        "url",
+        "weight",
+        "dimensions",
+        "history",
+        "raw",
+    ]
     assert delivered["status"] is ParcelStatus.DELIVERED
     assert delivered["delivered_at"] == "2026-04-29T13:12:42+00:00"
     assert delivered["history"][0]["raw_status"] == "FPX_L_RPIF"
@@ -128,10 +154,16 @@ def test_normalize_delivered_and_active_contract():
 
 def test_normalize_does_not_leak_event_text_or_location_to_attributes():
     raw = active_sample()
-    raw["tracks"][0].update({"tkDesc": "redacted event prose", "tkLocation": "redacted location"})
+    raw["tracks"][0].update(
+        {"tkDesc": "redacted event prose", "tkLocation": "redacted location"}
+    )
     parcel = normalize_parcel(raw, include_history=True)
-    assert "redacted event prose" not in str({key: value for key, value in parcel.items() if key != "raw"})
-    assert "redacted location" not in str({key: value for key, value in parcel.items() if key != "raw"})
+    assert "redacted event prose" not in str(
+        {key: value for key, value in parcel.items() if key != "raw"}
+    )
+    assert "redacted location" not in str(
+        {key: value for key, value in parcel.items() if key != "raw"}
+    )
 
 
 def test_capabilities_match_confirmed_fields_only():

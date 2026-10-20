@@ -1,4 +1,5 @@
 """Synthetic, non-identifying 4PX responses shared by tests."""
+
 from __future__ import annotations
 
 ACTIVE_CODE = "SYNTHETICACTIVE01"
@@ -7,7 +8,12 @@ DELIVERED_CODE = "SYNTHETICDONE0001"
 
 def event(code: str, timestamp: str) -> dict:
     """Return a synthetic event with no location or user-facing prose."""
-    return {"tkCode": code, "tkDate": timestamp, "tkDateStr": "2026-04-29 13:12:42", "tkTimezone": "+0000"}
+    return {
+        "tkCode": code,
+        "tkDate": timestamp,
+        "tkDateStr": "2026-04-29 13:12:42",
+        "tkTimezone": "+0000",
+    }
 
 
 def delivered_sample(code: str = DELIVERED_CODE) -> dict:
@@ -42,4 +48,9 @@ def pending_sample(code: str = "SYNTHETICPENDING") -> dict:
 
 
 def envelope(parcel: dict | None) -> dict:
-    return {"result": 1, "message": "", "data": [parcel] if parcel else None, "tag": "synthetic"}
+    return {
+        "result": 1,
+        "message": "",
+        "data": [parcel] if parcel else None,
+        "tag": "synthetic",
+    }

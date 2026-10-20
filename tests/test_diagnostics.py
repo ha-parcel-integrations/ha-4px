@@ -1,4 +1,5 @@
 """Diagnostics redaction tests using synthetic identifiers only."""
+
 from datetime import timedelta
 from unittest.mock import MagicMock
 
@@ -10,15 +11,25 @@ async def test_diagnostics_redacts_all_4px_identifier_and_contact_fields(hass):
     entry.options = {"parcels": [{"tracking_code": "SYNTHETICCODE"}]}
     entry.runtime_data.coordinator.current_tier_minutes = 15
     entry.runtime_data.coordinator.update_interval = timedelta(minutes=15)
-    entry.runtime_data.coordinator.data = [{
-        "barcode": "SYNTHETICCODE", "sender": "origin label", "receiver": "destination label",
-        "status": "in_transit", "raw": {
-            "queryCode": "SYNTHETICCODE", "serverCode": "SYNTHETICCODE",
-            "shipperCode": "SYNTHETICSHIPPER", "hawbCodeSet": ["SYNTHETICHANDOFF"],
-            "channelContact": {"placeholder": "synthetic"}, "sigPicUrl": "https://invalid.test/synthetic",
-            "tkLocation": "synthetic location", "tkDesc": "synthetic prose", "spTkZipCode": "00000",
-        },
-    }]
+    entry.runtime_data.coordinator.data = [
+        {
+            "barcode": "SYNTHETICCODE",
+            "sender": "origin label",
+            "receiver": "destination label",
+            "status": "in_transit",
+            "raw": {
+                "queryCode": "SYNTHETICCODE",
+                "serverCode": "SYNTHETICCODE",
+                "shipperCode": "SYNTHETICSHIPPER",
+                "hawbCodeSet": ["SYNTHETICHANDOFF"],
+                "channelContact": {"placeholder": "synthetic"},
+                "sigPicUrl": "https://invalid.test/synthetic",
+                "tkLocation": "synthetic location",
+                "tkDesc": "synthetic prose",
+                "spTkZipCode": "00000",
+            },
+        }
+    ]
     entry.runtime_data.coordinator.delivered = []
     entry.runtime_data.coordinator.delivered_codes = set()
     result = await async_get_config_entry_diagnostics(hass, entry)
@@ -33,7 +44,13 @@ async def test_diagnostics_redacts_all_4px_identifier_and_contact_fields(hass):
         "suspended": False,
     }
     redacted = str(result)
-    for value in ("SYNTHETICCODE", "SYNTHETICSHIPPER", "SYNTHETICHANDOFF", "synthetic location", "synthetic prose"):
+    for value in (
+        "SYNTHETICCODE",
+        "SYNTHETICSHIPPER",
+        "SYNTHETICHANDOFF",
+        "synthetic location",
+        "synthetic prose",
+    ):
         assert value not in redacted
     assert result["incoming"][0]["status"] == "in_transit"
 

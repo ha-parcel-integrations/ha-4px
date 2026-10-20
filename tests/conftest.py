@@ -1,4 +1,5 @@
 """pytest configuration for the 4PX test suite."""
+
 import sys
 
 import pytest

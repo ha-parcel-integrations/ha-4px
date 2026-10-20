@@ -1,4 +1,5 @@
 """Constants for the 4PX parcel tracker integration."""
+
 from enum import StrEnum
 
 from homeassistant.const import Platform
@@ -20,7 +21,9 @@ class ParcelStatus(StrEnum):
 
 
 PLATFORMS = [Platform.BUTTON, Platform.CALENDAR, Platform.SENSOR]
-KNOWN_CAPABILITIES = frozenset({"weight", "dimensions", "delivery_window", "pickup_point", "url", "history"})
+KNOWN_CAPABILITIES = frozenset(
+    {"weight", "dimensions", "delivery_window", "pickup_point", "url", "history"}
+)
 # 4PX supplies a timeline and a public consumer page. ETA, collection details,
 # weight and dimensions are deliberately not inferred from unconfirmed fields.
 CAPABILITIES = frozenset({"url", "history"})

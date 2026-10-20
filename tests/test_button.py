@@ -1,4 +1,5 @@
 """Tests for the 4PX refresh button."""
+
 from unittest.mock import AsyncMock, MagicMock
 
 from custom_components.fourpx.button import FPXRefreshButton
