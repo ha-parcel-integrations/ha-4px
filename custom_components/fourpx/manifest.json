@@ -1,6 +1,7 @@
 {
   "domain": "fourpx",
   "name": "4PX",
+  "categories": ["productivity_information"],
   "codeowners": [
     "@peter-mdf"
   ],
