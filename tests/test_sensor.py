@@ -5,7 +5,9 @@ from unittest.mock import MagicMock
 
 from custom_components.fourpx.const import ParcelStatus
 from custom_components.fourpx.sensor import (
+    FPXAwaitingPickupSensor,
     FPXDeliveredParcelsSensor,
+    FPXEnRouteToPickupPointSensor,
     FPXIncomingParcelsSensor,
     FPXLastUpdateSensor,
     FPXNextDeliverySensor,
@@ -66,12 +68,12 @@ def test_parcel_sensor_missing_barcode():
 def test_next_delivery_picks_earliest():
     coordinator = _coordinator(
         [
-            _parcel("A", planned_from="2026-05-02T10:00:00Z"),
-            _parcel("B", planned_from="2026-05-01T10:00:00Z"),
+            _parcel("A", planned_from="2099-05-02T10:00:00Z"),
+            _parcel("B", planned_from="2099-05-01T10:00:00Z"),
         ]
     )
     sensor = FPXNextDeliverySensor(coordinator, _entry())
-    assert sensor.native_value == datetime(2026, 5, 1, 10, 0, tzinfo=timezone.utc)
+    assert sensor.native_value == datetime(2099, 5, 1, 10, 0, tzinfo=timezone.utc)
     assert sensor.extra_state_attributes["barcode"] == "B"
 
 
@@ -85,11 +87,22 @@ def test_next_delivery_skips_unparseable_moment():
     coordinator = _coordinator(
         [
             _parcel("A", planned_from="not-a-date"),
-            _parcel("B", planned_from="2026-05-01T10:00:00Z"),
+            _parcel("B", planned_from="2099-05-01T10:00:00Z"),
         ]
     )
     sensor = FPXNextDeliverySensor(coordinator, _entry())
     assert sensor.extra_state_attributes["barcode"] == "B"
+
+
+def test_next_delivery_skips_an_ended_window():
+    coordinator = _coordinator(
+        [
+            _parcel("OLD", planned_from="2000-01-01T10:00:00Z"),
+            _parcel("NEW", planned_from="2099-05-01T10:00:00Z"),
+        ]
+    )
+    sensor = FPXNextDeliverySensor(coordinator, _entry())
+    assert sensor.extra_state_attributes["barcode"] == "NEW"
 
 
 def test_delivered_sensor():
@@ -107,3 +120,42 @@ def test_last_update_sensor():
     coordinator.last_success_time = moment
     sensor = FPXLastUpdateSensor(coordinator, _entry())
     assert sensor.native_value == moment
+
+
+def test_en_route_counts_only_active_pickup_parcels_not_at_point():
+    coordinator = _coordinator(
+        [
+            _parcel("A", pickup=True),
+            _parcel("B", status=ParcelStatus.AT_PICKUP_POINT, pickup=True),
+            _parcel("C", status=ParcelStatus.RETURNING, pickup=True),
+            _parcel("D", status=ParcelStatus.DELIVERED, pickup=True),
+            _parcel("E"),
+        ]
+    )
+    sensor = FPXEnRouteToPickupPointSensor(coordinator, _entry())
+    assert sensor.native_value == 2
+    assert [p["barcode"] for p in sensor.extra_state_attributes["parcels"]] == [
+        "A",
+        "D",
+    ]
+
+
+def test_awaiting_pickup_counts_only_parcels_at_the_point():
+    coordinator = _coordinator(
+        [
+            _parcel("A", status=ParcelStatus.AT_PICKUP_POINT, pickup=True),
+            _parcel("B", pickup=True),
+            _parcel("C", status=ParcelStatus.RETURNING, pickup=True),
+        ]
+    )
+    sensor = FPXAwaitingPickupSensor(coordinator, _entry())
+    assert sensor.native_value == 1
+    assert sensor.extra_state_attributes["parcels"][0]["barcode"] == "A"
+    assert sensor.unique_id == "e1_awaiting_pickup"
+
+
+def test_pickup_sensors_empty_without_data():
+    coordinator = _coordinator([])
+    coordinator.data = None
+    assert FPXAwaitingPickupSensor(coordinator, _entry()).native_value == 0
+    assert FPXEnRouteToPickupPointSensor(coordinator, _entry()).native_value == 0

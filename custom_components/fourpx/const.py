@@ -27,6 +27,7 @@ KNOWN_CAPABILITIES = frozenset(
 # 4PX supplies a timeline and a public consumer page. ETA, collection details,
 # weight and dimensions are deliberately not inferred from unconfirmed fields.
 CAPABILITIES = frozenset({"url", "history"})
+PENDING_CAPABILITIES = frozenset({"pickup_point"})
 
 TRACKING_API_URL = "https://track.4px.com/track/v2/front/listTrackV3"
 TRACKING_URL = "https://track.4px.com/#/track?trackCode={tracking_code}"

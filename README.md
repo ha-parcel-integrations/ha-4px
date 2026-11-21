@@ -35,7 +35,7 @@ A custom Home Assistant integration that tracks your [4PX](https://track.4px.com
 
 - Track any number of 4PX parcels by tracking code — no account needed
 - Per-parcel sensor with canonical status and a tracking deep-link
-- Summary sensors: incoming parcels, next delivery, recently delivered parcels
+- Summary sensors: incoming parcels, next delivery, en route to pickup point, awaiting pickup, recently delivered parcels
 - Read-only **Deliveries** calendar with the expected delivery windows
 - `fourpx.track_parcel` / `fourpx.untrack_parcel` services, so a dashboard button can add a parcel
 - Events + device triggers for no-code automations (parcel registered, status changed, delivered, delivery time changed)
@@ -111,11 +111,13 @@ Standard HA removal applies: **Settings → Devices & Services → 4PX → ⋮ �
 
 | Entity | Description |
 |---|---|
-| `sensor.fourpx_incoming_parcels` | Number of active tracked parcels, full list under the `parcels` attribute |
-| `sensor.fourpx_parcel_<code>` | One per tracked parcel; state is the canonical status, attributes carry the full normalised parcel |
-| `sensor.fourpx_next_delivery` | Earliest expected delivery moment across all active parcels |
-| `sensor.fourpx_delivered_parcels` | Recently delivered parcels (see the retention option) |
-| `sensor.fourpx_last_successful_update` | Diagnostic: when 4PX was last polled successfully |
+| `sensor.4px_incoming_parcels` | Number of active tracked parcels, full list under the `parcels` attribute |
+| `sensor.4px_parcel_<code>` | One per tracked parcel; state is the canonical status, attributes carry the full normalised parcel |
+| `sensor.4px_next_delivery` | Earliest expected delivery moment across all active parcels |
+| `sensor.4px_en_route_to_pickup_point` | Active parcels bound for a pickup point but not yet there (reads 0 until 4PX reports one) |
+| `sensor.4px_awaiting_pickup` | Parcels ready to collect at a pickup point (reads 0 until 4PX reports one) |
+| `sensor.4px_delivered_parcels` | Recently delivered parcels (see the retention option) |
+| `sensor.4px_last_successful_update` | Diagnostic: when 4PX was last polled successfully |
 
 A delivered parcel moves from its per-parcel sensor to the delivered sensor automatically.
 

@@ -41,12 +41,15 @@ Where this repo diverges from it, that is recorded below under
 
 ## Carrier-specific notes
 
-**No `awaiting_pickup` sensor yet — unconfirmed, not structural.** No
-pickup-point status/code has been observed for 4PX; `status_vocab` is only
-`partial` in carrier-research's `4px.md`, and `pickup`/`pickup_point` stay
-`False`/`None` in `parcels.py`. That is "unseen so far," not "cannot
-happen" — revisit once a real parcel or a fuller code capture settles it.
-See `.github/CONVENTIONS.md`'s pickup-point convention.
+**Pickup sensors exist; the pickup status is unseen so far.** The
+`awaiting_pickup` and `en_route_to_pickup_point` sensors are registered, and read
+0 until a pickup-point status/code is observed for 4PX (pending evidence: no
+such code has been seen, and the status vocabulary is only partly known). 4PX has
+no structured pickup flag, so `pickup` comes from `is_pickup` over the status and
+the events: it turns `True` (and stays `True` after collection) as soon as a code
+is mapped to `AT_PICKUP_POINT`, and is `False` until then. `pickup_point` stays
+`None` because 4PX names no point. `planned_from`/`planned_to` stay `None` (4PX
+gives no ETA) but still go through `planned_for_status`.
 
 4PX is an anonymous, code-only integration. Poll each configured code separately
 and retain a cached parcel after a transient failure or a pending/not-recognised
