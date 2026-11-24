@@ -263,7 +263,8 @@ def normalize_parcel(
     raw: dict[str, Any], *, include_history: bool = False
 ) -> dict[str, Any]:
     """Normalise a resolved 4PX payload; skeletons are handled by coordinator."""
-    events = raw.get("tracks") if isinstance(raw.get("tracks"), list) else []
+    tracks = raw.get("tracks")
+    events: list[Any] = tracks if isinstance(tracks, list) else []
     newest = events[0] if events and isinstance(events[0], dict) else {}
     if events:
         code = newest.get("tkCode")
@@ -281,7 +282,7 @@ def normalize_parcel(
         None,
         status,
         (
-            _STATUS_MAP.get(event.get("tkCode"))
+            _STATUS_MAP.get(str(event.get("tkCode")))
             for event in events
             if isinstance(event, dict)
         ),
