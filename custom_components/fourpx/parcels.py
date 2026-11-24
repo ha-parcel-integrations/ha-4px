@@ -291,6 +291,7 @@ def normalize_parcel(
         "barcode": raw.get("serverCode"),
         "sender": raw.get("ctStartName") or None,
         "receiver": raw.get("ctEndName") or None,
+        "contents": None,
         "status": status,
         "raw_status": code,
         "delivered": status is ParcelStatus.DELIVERED,

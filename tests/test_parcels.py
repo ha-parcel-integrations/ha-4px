@@ -130,6 +130,7 @@ def test_normalize_delivered_and_active_contract():
         "barcode",
         "sender",
         "receiver",
+        "contents",
         "status",
         "raw_status",
         "delivered",
@@ -169,3 +170,4 @@ def test_normalize_does_not_leak_event_text_or_location_to_attributes():
 def test_capabilities_match_confirmed_fields_only():
     assert CAPABILITIES == frozenset({"url", "history"})
     assert CAPABILITIES <= KNOWN_CAPABILITIES
+    assert "contents" in KNOWN_CAPABILITIES - CAPABILITIES

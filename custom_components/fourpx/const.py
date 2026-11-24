@@ -22,7 +22,15 @@ class ParcelStatus(StrEnum):
 
 PLATFORMS = [Platform.BUTTON, Platform.CALENDAR, Platform.SENSOR]
 KNOWN_CAPABILITIES = frozenset(
-    {"weight", "dimensions", "delivery_window", "pickup_point", "url", "history"}
+    {
+        "weight",
+        "dimensions",
+        "delivery_window",
+        "pickup_point",
+        "url",
+        "history",
+        "contents",
+    }
 )
 # 4PX supplies a timeline and a public consumer page. ETA, collection details,
 # weight and dimensions are deliberately not inferred from unconfirmed fields.
@@ -34,6 +42,7 @@ TRACKING_URL = "https://track.4px.com/#/track?trackCode={tracking_code}"
 
 CONF_PARCELS = "parcels"
 CONF_TRACKING_CODE = "tracking_code"
+CONF_CONTENTS = "contents"
 CONF_DELIVERED_FILTER_TYPE = "delivered_filter_type"
 CONF_DELIVERED_FILTER_AMOUNT = "delivered_filter_amount"
 DEFAULT_DELIVERED_FILTER_TYPE = "days"

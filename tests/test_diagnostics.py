@@ -16,6 +16,7 @@ async def test_diagnostics_redacts_all_4px_identifier_and_contact_fields(hass):
             "barcode": "SYNTHETICCODE",
             "sender": "origin label",
             "receiver": "destination label",
+            "contents": "synthetic note",
             "status": "in_transit",
             "raw": {
                 "queryCode": "SYNTHETICCODE",
@@ -50,8 +51,10 @@ async def test_diagnostics_redacts_all_4px_identifier_and_contact_fields(hass):
         "SYNTHETICHANDOFF",
         "synthetic location",
         "synthetic prose",
+        "synthetic note",
     ):
         assert value not in redacted
+    assert result["incoming"][0]["contents"] == "**REDACTED**"
     assert result["incoming"][0]["status"] == "in_transit"
 
 
